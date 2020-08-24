@@ -25,10 +25,12 @@ jobs:
           ./scripts/feeds install -a
           
     - name: Generate configuration file
-      run: make menuconfig
+      run: |
+       make menuconfig
     
     - name: Build  firmware
-      run: make 
+      run: |
+       make 
     
     - name: Prepare artifact
       run: |
