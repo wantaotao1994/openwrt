@@ -10,34 +10,32 @@ jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
+      - uses: actions/checkout@v3
       - name: configure
-      - uses: actions/checkout@v2
-        with:
-          ref: master
 
       - name: Build and Deploy
         run: |
-             sudo apt-get update -y
-             sudo apt-get install -y subversion g++ zlib1g-dev build-essential git python python3 python3-distutils libncurses5-dev gawk gettext unzip file libssl-dev wget libelf-dev ecj fastjar java-propose-classpath
-           
+           sudo apt-get update -y
+           sudo apt-get install -y subversion g++ zlib1g-dev build-essential git python python3 python3-distutils libncurses5-dev gawk gettext unzip file libssl-dev wget libelf-dev ecj fastjar java-propose-classpath
+
       - name: Update feeds
         run: |
             sed -i 's/\"#src-git\"/\"src-git\"/g' ./feeds.conf.default
             ./scripts/feeds update -a
             ./scripts/feeds install -a
-            
+
       - name: Generate configuration file
         run: |
-              make menuconfig
-         
+         make menuconfig
+
       - name: Build  firmware
         run: |
-              make 
-              
+         make 
+
       - name: Prepare artifact
         run: |
            find ./bin/targets/ -type d -name "packages" | xargs rm -rf {}
-           
+
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
